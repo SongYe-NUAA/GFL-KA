@@ -1,0 +1,11 @@
+Model mAP Metrics:
+| Model   | mAP   | mAP_50   | mAP_75   | mAP_s   | mAP_m   | mAP_l   |
+|---------|-------|----------|----------|---------|---------|---------|
+
+Category Precision Metrics:
+| Model   |
+|---------|
+
+Speed Metrics:
+| Model   | FPS   | FPS (inference only)   | Total Time (ms)   | Data Time (ms)   | Inference Time (ms)   |
+|---------|-------|------------------------|-------------------|------------------|-----------------------|

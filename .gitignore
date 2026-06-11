@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+eggs/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.cache
+
+# Training outputs
+runs/
+outputs/
+work_dirs/
+*.pth
+*.pth.tar
+*.pt
+*.onnx
+
+# Data
+data/
+*.jpg
+*.png
+*.jpeg
+*.mp4
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,136 @@
+\section{Methodology}
+
+%我们提出了 GFL - KA，这是一种新颖的定位质量估计框架，通过峰度分析整合高阶统计信息，对广义焦点损失（GFL）检测器进行了增强。我们的设计遵循 "局部统计 - 全局形态" 范式，有效地捕捉了边界框回归中概率分布的内在特征。这种方法显著提升了模型在地理环境、光照条件和目标密度存在多维变化的各种场景下风机叶片缺陷的泛化能力。%
+
+We propose GFL-KA, a novel localization quality estimation framework that enhances the Generalized Focal Loss (GFL) detector by integrating high-order statistical information through kurtosis analysis. Our design follows a 'local statistics - global morphology' paradigm, which effectively captures the intrinsic characteristics of probability distributions in bounding box regression. This method improves the model's generalization ability in detecting Windturbine blade defects under various scenarios with multidimensional changes in geographical environment, lighting conditions, and target density.
+
+%在本节中，我们首先全面概述 GFL - KA 架构。然后，我们介绍峰度注意力引导质量预测器（KAGQP），它利用分布形状信息生成更准确的质量分数。最后，我们详细阐述峰度注意力模块（KAM），该模块根据概率分布的峰值自适应地对特征表示进行加权，为预测置信度提供了更可靠的度量。%
+In this section, we first present a comprehensive overview of the GFL-KA architecture. Then, we introduce the Kurtosis Attention-Guided Quality Predictor (KAGQP), which leverages distribution shape information to generate more accurate quality scores. Finally, we detail the Kurtosis Attention Module (KAM), which adaptively weights feature representations based on the peakedness of probability distributions, providing a more reliable measure of prediction confidence.
+
+\subsection{Overview of GFL-KA }
+
+%如图 5 所示，我们的 GFL-KA 架构由三个主要部分组成：一个用于特征提取的主干网络、一个用于多尺度特征表示的特征金字塔网络（FPN），以及我们融入峰度注意力机制的新型检测头。检测头与传统设计不同，它实现了三个专门的并行分支：一个简化的分类分支、一个回归分支，以及我们提出的峰度注意力引导质量预测器（KAGQP）。%
+
+As illustrated in Fig.\ref{fig:GFL-KA}, our GFL-KA architecture consists of three main components: a backbone network for feature extraction, a Feature Pyramid Network (FPN) for multi-scale feature representation, and our novel detection head incorporating the kurtosis attention mechanism. The detection head diverges from traditional designs by implementing three specialized parallel branches: a streamlined classification branch, a regression branch, and our proposed Kurtosis Attention-Guided Quality Predictor (KAGQP).
+
+%我们设计的一个显著特点是对网络架构进行了策略性优化。我们通过去除所有卷积层简化了分类分支，使其能够直接处理主干特征，而堆叠卷积架构仅在回归分支中有选择地保留。这种精心设计的非对称架构显著减少了模型参数和计算复杂度，同时在训练过程中促进了更高效的梯度流动，并提高了分类和定位任务之间的特征互补性。我们的实验表明，这种架构改进不仅加快了推理速度，还有助于实现更准确、更稳健的定位质量估计，特别是在目标尺度多样且背景复杂的检测场景中。%
+
+A notable aspect of our design is the strategic optimization of the network architecture. We have streamlined the classification branch by removing all convolutional layers, enabling it to directly process backbone features, while the stacked convolutional architecture is selectively maintained only in the regression branch. This deliberate asymmetric design significantly reduces model parameters and computational complexity, while simultaneously fostering more efficient gradient flow during training and improving feature complementarity between the classification and localization tasks. Our experiments demonstrate that this architectural refinement not only accelerates inference but also contributes to a more accurate and robust localization quality estimation, particularly in detection scenarios characterized by diverse target scales and complex backgrounds.
+
+
+\subsection{ Kurtosis-Attention Guided Quality Predictor (KAGQP)}
+%现有质量预测方法的一个关键局限在于它们依赖于前四概率特征，这可能无法捕捉边界框坐标概率分布中的重要不连续性。这种信息损失会影响定位精度，尤其是对于具有复杂边界的物体或在具有挑战性的环境中的物体。为了在不增加计算复杂度或训练时间的情况下解决这一局限，我们引入了峰度注意力引导质量预测器（KAGQP）。%
+A critical limitation in existing quality prediction approaches is their reliance on TOP4 probability features, which may fail to capture important discontinuities in the probability distribution of bounding box coordinates. This information loss can impact localization accuracy, especially for objects with complex boundaries or in challenging environments. To address this limitation without increasing computational complexity or training time, we introduce the Kurtosis Attention-Guided Quality Predictor (KAGQP).
+
+%KAGQP 通过峰度统计纳入全局分布信息，从而增强了质量预测能力。与仅关注最可能值的传统方法不同，我们的方法考虑概率分布的整体形状，对预测可靠性进行更全面的评估。实现此功能的关键组件是我们的峰度注意力模块（KAM），下一节将详细介绍。通过将 KAM 集成到质量预测分支中，KAGQP 有效地平衡了局部峰值特征与全局分布特征，从而在各种检测场景中实现更准确的定位质量估计。%
+KAGQP enhances the quality prediction capability by incorporating global distribution information through kurtosis statistics. Unlike conventional methods that focus solely on the most probable values, our approach considers the entire shape of the probability distribution, providing a more comprehensive assessment of prediction reliability. The key component enabling this functionality is our Kurtosis Attention Module (KAM), which will be detailed in the following section. By integrating KAM into the quality prediction branch, KAGQP effectively balances local peak features with global distribution characteristics, resulting in more accurate localization quality estimation across diverse detection scenarios.
+
+%峰度注意力引导质量预测器（KAGQP）将统计特征转换为准确的定位质量分数。传统方法和我们提出的方法均从针对四个边界框坐标中的每一个，从概率分布P中提取局部统计信息开始。%
+The Kurtosis Attention-Guided Quality Predictor (KAGQP) transforms statistical features into accurate localization quality scores. Both traditional and our proposed methods begin by extracting local statistical information from the probability distribution $P$ for each of the four bounding box coordinates.
+
+
+%具体来说，对于每个坐标的概率分布p j，我们提取其前k个值（其中k=4）组成的向量，我们将其表示为t j =(t 1j,…,t kj)。然后计算这些值的平均值：%
+
+Specifically, for each coordinate's probability distribution $p^j$, we extract the vector of its top-$k$ values (where $k=4$), which we denote as $\mathbf{t}^j = (t^j_1, \dots, t^j_k)$. The mean of these values is then computed:
+\begin{equation}
+\mu^j = \frac{1}{k}\sum_{i=1}^{k}t^j_i
+\end{equation}
+%对于每个坐标，我们通过连接其前 k向量 t j及其均值 μ j来形成一个局部统计特征向量 s j 。%
+For each coordinate, we form a local statistical feature vector, $\mathbf{s}^j$, by concatenating its top-$k$ vector $\mathbf{t}^j$ and its mean $\mu^j$.
+\begin{equation}
+\mathbf{s}^j = \text{Concat}(\mathbf{t}^j, \mu^j)
+\end{equation}
+%然后将这四个局部特征向量连接起来，形成最终的综合特征向量Stat：%
+These four local feature vectors are then concatenated to form the final comprehensive feature vector, $\text{Stat}$:
+\begin{equation}
+Stat_{old} = \text{Concat}(\mathbf{s}^1, \mathbf{s}^2, \mathbf{s}^3, \mathbf{s}^4)
+\end{equation}
+%传统的质量预测方法通常直接将这个统计向量Stat用作后续预测层的输入。%
+Traditional quality prediction approaches typically use this statistical vector $\text{Stat}$ directly as input for the subsequent prediction layers.
+
+%相比之下，我们的 KAGQP 通过基于注意力的动态权重融入全局分布信息，从而增强了这个特征向量。该权重是使用归一化峰度κ Pnorm来制定的，它由 KAM 模块生成。最终的加权特征向量S ours 通过如下方式对Stat进行调制来计算%
+In contrast, our KAGQP enhances this feature vector by incorporating global distribution information through a dynamic, attention-based weight. This weight is formulated using the normalized kurtosis, $\kappa_P^{norm}$, which is generated by the KAM module (detailed in the next section). The final weighted feature vector, $Stat_{ours}$, is computed by modulating $\text{Stat}$ as follows:
+\begin{equation}
+Stat_{ours} = S_{old} \cdot \left(1 + \sigma(\alpha) \cdot (\exp(\kappa_P^{norm} \cdot \gamma) + \sigma(\beta))\right)
+\end{equation}
+
+%其中 κ Pnorm是由 KAM 提供的批量归一化峰度，而 α、β和 γ是可学习参数，用于控制注意力机制。具体来说，α和 β充当注意力权重，而 γ作为归一化峰度指数变换的缩放因子。sigmoid 函数 σ(⋅) 确保训练动态的稳定性。这种指数变换放大了高和低峰度值之间的差异，使模型能够更有效地区分可靠和不可靠的预测。%
+where $\kappa_P^{norm}$ is the batch-wise normalized kurtosis provided by KAM, and $\alpha$, $\beta$, and $\gamma$ are learnable parameters that control the attention mechanism. Specifically, $\alpha$ and $\beta$ act as attention weights, while $\gamma$ serves as a scaling factor for the exponential transformation of the normalized kurtosis. The sigmoid function, $\sigma(\cdot)$, ensures stable training dynamics. This exponential transformation amplifies the differences between high and low kurtosis values, allowing the model to more effectively distinguish between confident and uncertain predictions.
+
+%然后，KAGQP 架构通过两个带有中间 ReLU 激活函数的1×1卷积层对这些峰度增强特征进行处理，以生成质量分数q
+%
+The KAGQP architecture then processes these kurtosis-enhanced features through two $1 \times 1$ convolutional layers with an intermediate ReLU activation function to generate the quality score $q$:
+\begin{equation}
+q=\text{Sigmoid}\left(\text{Conv}_2\left(\text{ReLU}\left(\text{Conv}_1(S_{ours})\right)\right)\right)
+\end{equation}
+%最后，该质量分数通过逐元素相乘与分类置信度相结合%
+Finally, this quality score is integrated with the classification confidence through element-wise multiplication:
+\begin{equation}
+\text{Score} = \text{Sigmoid(ClsLogits)} \cdot q
+\end{equation}
+%其中 ClsLogits 表示来自分类分支的原始输出对数几率。%
+where $q$ is the predicted quality score, and $ClsLogits$ represents the raw output logits from the classification branch.
+%我们的创新之处在于引入基于峰度的特征加权，通过分析分布特征自适应地强调更可靠的预测，同时结合可学习的注意力参数，针对不同检测场景优化峰度的影响。通过整合由峰度衍生的注意力加权的前 k 值和分布均值，我们的方法比仅关注局部峰值或简单统计量的方法能更全面地捕捉预测置信度的表征。这种在数学上严谨且计算高效的设计使 KAGQP 能够在不产生显著开销的情况下提取丰富的定位质量信息，从而在各种风机叶片缺陷检测场景中实现更准确的质量估计。%
+
+Our innovation lies in introducing kurtosis-based feature weighting that adaptively emphasizes more reliable predictions by analyzing distribution characteristics, combined with learnable attention parameters that optimize the influence of kurtosis for different detection scenarios. By integrating both top-k values and distribution mean, weighted by kurtosis-derived attention, our approach captures a more comprehensive representation of prediction confidence than methods focusing solely on local peaks or simple statistics. This mathematically rigorous yet computationally efficient design enables KAGQP to extract rich localization quality information without significant overhead, thus achieving more accurate quality estimation in various wind turbine blade defect detection scenarios.
+
+\subsection{Kurtosis Attention Module (KAM)}
+%我们提出峰度注意力模块（KAM）来解决原模型GFL中仅采用局部统计特征带来的局限性，该模块利用峰度（一种用于量化概率分布 "尖峰程度" 的四阶统计矩）。峰度为预测置信度提供了关键信息：高值表示具有高确定性的尖锐峰值，而低值则表明分布更加均匀，不确定性更高。我们的 KAM 包含可学习参数以进行自适应缩放，使网络能够在训练过程中优化分布形状信息的影响，从而提高对不同边界清晰度物体的定位质量估计。%
+We propose the Kurtosis Attention Module (KAM) to address the limitations brought about by the original model GFL's sole use of local statistical features. This module utilizes kurtosis, a fourth - order statistical moment used to quantify the "peakedness" of a probability distribution. Kurtosis provides crucial insights into prediction confidence: high values indicate sharp peaks with high certainty, while low values suggest more uniform distributions with higher uncertainty. Our KAM incorporates learnable parameters for adaptive scaling, enabling the network to optimize the influence of distribution shape information during training, thus enhancing localization quality estimation for objects with varying boundary clarity.
+
+%我们使用残差连接以防止存在错误的统计量而导致的噪声引起的性能下降。质量预测的最终特征是均值和峰度的加权组合，其中权重也是可学习的。KAM的设计具有以下优势:网络能够自适应地关注分布的统计特征,,增强尖锐分布的得分,降低平缓的分布得分,实现做到全局与局部的统一,从而实现更可靠的质量评估。
+We use residual connections to prevent performance degradation caused by noise resulting from incorrect statistics. The final feature for quality prediction is a weighted combination of the mean and kurtosis, where the weights are also learnable. The design of KAM has the following advantages: the network can adaptively focus on the statistical characteristics of the distribution, enhance the scores of sharp distributions, reduce the scores of flat distributions, achieve the unity of the global and local, and thus achieve more reliable quality assessment.
+
+%峰度是一个四阶统计矩，用于量化概率分布的 "尖峰程度" 或 "尾部程度"。对于可能的边界框坐标上的离散概率分布 p，峰度的计算方法如下：%
+Kurtosis is a fourth-order statistical moment that quantifies the 'peakedness' or 'tailedness' of a probability distribution. For each discrete probability distribution $p^j$ over possible bounding box coordinates, the kurtosis is calculated as:
+\begin{equation}
+\operatorname{Kurtosis}(p^j)=\frac{1}{N} \sum_{i=1}^{N}\left(\frac{p^j_{i}-\bar{p}^j}{\sigma^j}\right)^{4}
+\end{equation}
+%其中K=regmax+1表示分布中离散区间的数量（在我们的实现中通常为 17），p_i是第i个区间的概率，pˉ是分布的均值，σ是标准差。这些统计矩的计算方式如下：%
+where $N = \text{reg\_max} + 1$ represents the number of discrete bins (typically 17), $p^j_i$ is the probability of the $i$-th bin for the $j$-th coordinate, $\bar{p}^j$ is the mean of that distribution, and $\sigma^j$ is its standard deviation. These statistical moments are computed as:
+\begin{equation}
+\bar{p}^j=\frac{1}{N} \sum_{i=1}^{N} p^j_{i}
+\end{equation}
+\begin{equation}
+\sigma^j=\sqrt{\frac{1}{N} \sum_{i=1}^{N}(p^j_i-\bar{p}^j)^2 + \epsilon}
+\end{equation}
+%其中ϵ=10 −6是一个小常数，添加它是为了防止在代码实现中出现除以零的情况。%
+where $\epsilon = 10^{-6}$ is a small constant added to prevent numerical instability in the implementation.
+
+%在我们的 KAM 实现中，我们分别计算四个边界框坐标（左、上、右、下）各自的峰度。然后，将得到的峰度值在四个维度上进行平均，以获得每个空间位置的单一峰度度量：%
+In our KAM implementation, we compute the kurtosis separately for each of the four bounding box coordinates (left, top, right, bottom). The resulting kurtosis values are then averaged across the four dimensions to obtain a single kurtosis measure for each spatial location:
+\begin{equation}
+\kappa = \frac{1}{4}\sum_{j=1}^{4}\operatorname{Kurtosis}(p^j)
+\end{equation}
+%其中p j表示第j个坐标的概率分布。为确保适当的缩放和数值稳定性，我们应用自适应线性归一化，将峰度值映射到区间[0,1]：%
+where $p^j$ represents the probability distribution for the $j$-th coordinate.
+
+To ensure proper scaling and numerical stability, we apply a sigmoid activation to map the kurtosis values to the range $[0,1]$:
+\begin{equation}
+\kappa_P^{sig} = \sigma(\kappa)
+\end{equation}
+%其中σ(⋅)表示 sigmoid 函数。这种非线性映射将峰度值压缩到一个有界区间内，有效地减轻了异常值的影响，并增强了统计信号的稳健性。得到的归一化峰度κ 提供了一个可靠的预测置信度度量，并被传递到 KAGQP 模块进行特征加权。这种模块化设计使 KAM 能够专注于生成稳定的统计信号，然后 KAGQP 利用该信号进行更细致准确的质量评估。
+where $\sigma(\cdot)$ denotes the sigmoid function. This non-linear mapping compresses the kurtosis values into a bounded interval, effectively mitigating the influence of outliers and enhancing the robustness of the statistical signal. The resulting normalized kurtosis, $\kappa_P^{sig}$
+ , provides a reliable measure of prediction confidence and is passed to the KAGQP module for feature weighting. This modular design allows KAM to focus solely on producing a stable statistical signal, which KAGQP then leverages to perform a more nuanced and accurate quality assessment.
+
+\subsection{Gradient Balance Factor for Adaptive QFL}
+Although the proposed KAM and KAGQP improve the reliability of quality predictions, we observe that dense detectors still suffer from unstable gradients when the predicted IoU is much larger than the ground-truth IoU of a positive sample. To alleviate this issue without perturbing the learning target, we devise a Gradient Balance Factor (GBF) that modulates the Quality Focal Loss (QFL) only at the weighting level. Let $p$ denote the sigmoid output of the classification-quality branch and $q$ the true IoU supervision. The prediction gap is $\Delta = q - p$, and the GBF is formulated as
+\begin{equation}
+    w_{\text{GBF}}(\Delta) =
+    \begin{cases}
+        \dfrac{1}{1+\alpha\,\Delta}, & \Delta > \tau,\\[6pt]
+        1, & \text{otherwise},
+    \end{cases}
+    \label{eq:gbf}
+\end{equation}
+where $\alpha$ is the gradient balancing coefficient and $\tau=0.3$ follows the empirical setting in our loss implementation. This piecewise design selectively suppresses samples whose predictions substantially under-estimate the target, thereby preventing the large gradients that would otherwise dominate the optimization.
+
+For each positive sample located at index $(i, c)$, the QFL term is rewritten as
+\begin{equation}
+    \mathcal{L}_{\text{QFL}}^{(i,c)} =
+    \text{BCE}\big(p_{i,c}, q_i\big)\;
+    \underbrace{|p_{i,c}-q_i|^{\beta}}_{\text{base focal term}}\;
+    \underbrace{w_{\text{GBF}}(q_i-p_{i,c})}_{\text{gradient balance}},
+    \label{eq:qfl_gbf}
+\end{equation}
+where $\beta$ is the standard focusing exponent. By multiplying $w_{\text{GBF}}$ with the base focal modulation, the loss still honors the original IoU target $q_i$ (no label smoothing or rescaling is introduced), but the gradient magnitude is adaptively reduced whenever $p_{i,c}$ lags too far behind $q_i$. Consequently, the overall optimization becomes smoother: extreme hard positives no longer cause gradient explosions, while easy samples ($|p-q|\le\tau$) retain the canonical QFL dynamics. In our ablation studies, inserting GBF shortens the convergence time and yields consistent gains in mean AP, demonstrating that this IEEE-compliant innovation is both theoretically sound and practically effective for the WindBlade-30K benchmark.
