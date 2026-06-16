@@ -48,15 +48,57 @@ WindBlade-30K/
 
 ### Dataset Statistics
 
-| Split | Images | Instances | Small | Medium | Large |
+| Split | Images | Instances | Small (<0.001%) | Medium (0.001%–0.005%) | Large (>0.005%) |
 | --- | --- | --- | --- | --- | --- |
 | Train | 3,618 | 21,627 | 8,558 | 7,710 | 5,359 |
 | Val | 775 | 4,459 | 1,853 | 1,397 | 1,123 |
 | Test | 775 | 4,437 | 1,739 | 1,572 | 1,126 |
 
-### Defect Categories
+### Defect Categories and Instance Distribution
 
-`hole`, `leaf-opex`, `corrosion`, `stain`, `corrosion-pit`, `lightning-arrester-miss`, `degumming`, `repair`, `lightning-arrester`, `teeth`, `demould`, `painting-peel-off`, `sign`, `crack`, `dirt`, `swell`, `oil`
+| Category | Description | Instances |
+| --- | --- | --- |
+| corrosion-pit | Small pits from corrosion | 18,226 |
+| stain | Weather-induced surface stain | 4,420 |
+| hole | Pinhole and through-hole defect | 2,064 |
+| corrosion | Large corrosion area | 1,499 |
+| degumming | Large-area gel coat peeling | 1,037 |
+| crack | Surface crack defect | 797 |
+| sign | Surface mark and label | 749 |
+| dirt | Dust and dirt deposition | 320 |
+| repair | Surface repair trace | 270 |
+| demould | Protective film peeling | 269 |
+| lightning-arrester | Lightning receptor | 218 |
+| leaf-opex | Blade tip damage | 135 |
+| teeth | Leading edge serration structure | 104 |
+| painting-peel-off | Navigation paint abrasion | 96 |
+| oil | Oil stain from nacelle leakage | 89 |
+| lightning-arrester-miss | Missing lightning receptor | 87 |
+| swell | Surface bulge defect | 57 |
+
+### Defect Classification Criteria
+
+The following criteria were used to standardize defect categories during dataset construction. Each criterion is defined by the defect's area ratio, aspect ratio, and grayscale mean value.
+
+| Category | Area Ratio (%) | Aspect Ratio (%) | Grayscale Mean |
+| --- | --- | --- | --- |
+| corrosion | 2.0 – 100 | 0.25 – 20 | 40 – 245 |
+| corrosion-pit | 0.0010 – 1.0 | 0.25 – 4.5 | 15 – 245 |
+| crack | 0.0040 – 100 | 0.050 – 15 | 40 – 250 |
+| degumming | 0.0050 – 100 | 0.10 – 25 | 30 – 220 |
+| demould | 0.0020 – 50 | 0.25 – 15 | 20 – 215 |
+| dirt | 0.0040 – 2.5 | 0.25 – 5.0 | 110 – 180 |
+| hole | 0.00050 – 5.0 | 0.25 – 4.0 | 30 – 240 |
+| leaf-opex | 0.010 – 1.5 | 0.25 – 5.0 | 40 – 190 |
+| lightning-arrester | 0.0020 – 0.30 | 0.25 – 3.5 | 25 – 245 |
+| lightning-arrester-miss | 0.0040 – 0.30 | 0.25 – 3.5 | 25 – 245 |
+| oil | 0.50 – 100 | 0.25 – 10 | 15 – 225 |
+| painting-peel-off | 1.0 – 65 | 0.25 – 10 | 50 – 210 |
+| repair | 0.010 – 60 | 0.10 – 15 | 30 – 245 |
+| sign | 0.0015 – 5.0 | 0.25 – 15 | 30 – 240 |
+| stain | 0.0080 – 100 | 0.25 – 20 | 18 – 245 |
+| swell | 0.0050 – 6.0 | 0.25 – 5.0 | 85 – 230 |
+| teeth | 0.20 – 100 | 0.25 – 20 | 75 – 220 |
 
 ### Data Preparation
 
