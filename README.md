@@ -64,6 +64,65 @@ WindBlade-30K/
 2. Extract the archive.
 3. Place the dataset under the repository root or update `data_root` in the experiment config to point to the extracted path.
 
+### Data Sources and Citations
+
+WindBlade-30K is built upon multiple publicly released wind turbine blade defect datasets after systematic collection, annotation correction, class normalization, and COCO-style unification. When you use this dataset or any downstream research based on it, please also cite the following original sources as appropriate.
+
+- **DTU dataset**
+```bibtex
+@article{shihavuddin2019wind,
+  title   = {Wind Turbine Surface Damage Detection by Deep Learning Aided Drone Inspection Analysis},
+  author  = {Shihavuddin, A. and Chen, X. and Fedorov, V. and Christensen, N. N. and Riis, A. B. and Branner, K. and Dahl, A. B. and Paulsen, R. R.},
+  journal = {Energies},
+  volume  = {12},
+  number  = {4},
+  pages   = {676},
+  year    = {2019}
+}
+```
+
+- **YAWTSD dataset**
+```bibtex
+@article{sarkar2021wind,
+  title   = {Wind Turbine Blade Structural State Evaluation by Hybrid Object Detector Relying on Deep Learning Models},
+  author  = {Sarkar, D. and Gunturi, S. K.},
+  journal = {Journal of Ambient Intelligence and Humanized Computing},
+  year    = {2021}
+}
+```
+
+- **Blade30 dataset**
+```bibtex
+@article{yang2023accurate,
+  title   = {Towards Accurate Image Stitching for Drone-Based Wind Turbine Blade Inspection},
+  author  = {Yang, C. and Liu, X. and Zhou, H. and Ke, Y. and See, J.},
+  journal = {Renewable Energy},
+  volume  = {203},
+  pages   = {267--279},
+  year    = {2023}
+}
+```
+
+- **WCVP dataset**
+```bibtex
+@misc{roboflow2023wcvp,
+  title   = {Wind Turbine Computer Vision Project},
+  author  = {Tanishka},
+  year    = {2023},
+  howpublished = {\url{https://universe.roboflow.com/tanishka-p3e2d/windturbine-dmyul}}
+}
+```
+
+- **WTBSDD dataset**
+```bibtex
+@misc{zhaowenhai2023wtbsdd,
+  title   = {Wind Turbine Blade Surface Defect Dataset},
+  author  = {Zhaowenhai},
+  year    = {2023},
+  howpublished = {\url{https://github.com/zhaowenhai2023/Wind-turbine-blade-surface-defect-dataset}}
+}
+```
+
 ## Method Overview
 
 GFL-KA is built upon GFLv2 and focuses on improving localization quality estimation for dense defect detection under challenging UAV imaging conditions.
