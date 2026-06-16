@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-lightgrey)](LICENSE)
 
 <p align="center">
-  <b>Ye Song</b> · <b>Yiquan Wu</b><br/>
+  <b>Ye Song</b> · <b>Yiquan Wu</b> · <b>Yuqi Liu</b> · <b>Hanwen Yu</b><br/>
   <a href="https://github.com/SongYe-NUAA/GFL-KA">GitHub</a> · <a href="dataset.txt">Dataset</a>
 </p>
 </div>
