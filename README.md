@@ -46,13 +46,24 @@ WindBlade-30K/
     └── ...
 ```
 
+### Comparison with Existing Datasets
+
+| Dataset | Origin | Images | Instances | Classes | Annotation Type |
+| --- | --- | --- | --- | --- | --- |
+| DTU | DTU | 701 | 0 | 4 | None |
+| YAWTSD | Plymouth | 701 | 9,351 | 2 | Bounding Box |
+| Blade30 | Soochow University | 1,302 | 1,218 | 31 | Polygon |
+| WCVP | Roboflow | 2,137 | 1,908 | 13 | Mask |
+| WTBSDD | — | 3,808 | 8,103 | 6 | Polygon |
+| **WindBlade-30K** | — | **5,168** | **30,437** | **17** | **Bounding Box** |
+
 ### Dataset Statistics
 
-| Split | Images | Instances | Small (<0.001%) | Medium (0.001%–0.005%) | Large (>0.005%) |
+| Split | Images | Instances | Small (<0.1%) | Medium (0.1%–0.5%) | Large (>0.5%) |
 | --- | --- | --- | --- | --- | --- |
-| Train | 3,618 | 21,627 | 8,558 | 7,710 | 5,359 |
-| Val | 775 | 4,459 | 1,853 | 1,397 | 1,123 |
-| Test | 775 | 4,437 | 1,739 | 1,572 | 1,126 |
+| Train | 3,618 | 21,627 | 15,966 | 2,055 | 3,606 |
+| Val | 775 | 4,373 | 3,114 | 521 | 738 |
+| Test | 775 | 4,437 | 3,259 | 441 | 737 |
 
 ### Defect Categories and Instance Distribution
 
@@ -82,23 +93,23 @@ The following criteria were used to standardize defect categories during dataset
 
 | Category | Area Ratio (%) | Aspect Ratio (%) | Grayscale Mean |
 | --- | --- | --- | --- |
+| corrosion-pit | 0.001 – 1.0 | 0.25 – 4.5 | 15 – 245 |
+| stain | 0.008 – 100 | 0.25 – 20 | 18 – 245 |
+| hole | 0.0005 – 5.0 | 0.25 – 4.0 | 30 – 240 |
 | corrosion | 2.0 – 100 | 0.25 – 20 | 40 – 245 |
-| corrosion-pit | 0.0010 – 1.0 | 0.25 – 4.5 | 15 – 245 |
-| crack | 0.0040 – 100 | 0.050 – 15 | 40 – 250 |
-| degumming | 0.0050 – 100 | 0.10 – 25 | 30 – 220 |
-| demould | 0.0020 – 50 | 0.25 – 15 | 20 – 215 |
-| dirt | 0.0040 – 2.5 | 0.25 – 5.0 | 110 – 180 |
-| hole | 0.00050 – 5.0 | 0.25 – 4.0 | 30 – 240 |
-| leaf-opex | 0.010 – 1.5 | 0.25 – 5.0 | 40 – 190 |
-| lightning-arrester | 0.0020 – 0.30 | 0.25 – 3.5 | 25 – 245 |
-| lightning-arrester-miss | 0.0040 – 0.30 | 0.25 – 3.5 | 25 – 245 |
-| oil | 0.50 – 100 | 0.25 – 10 | 15 – 225 |
-| painting-peel-off | 1.0 – 65 | 0.25 – 10 | 50 – 210 |
-| repair | 0.010 – 60 | 0.10 – 15 | 30 – 245 |
+| degumming | 0.005 – 100 | 0.1 – 25 | 30 – 220 |
+| crack | 0.004 – 100 | 0.05 – 15 | 40 – 250 |
 | sign | 0.0015 – 5.0 | 0.25 – 15 | 30 – 240 |
-| stain | 0.0080 – 100 | 0.25 – 20 | 18 – 245 |
-| swell | 0.0050 – 6.0 | 0.25 – 5.0 | 85 – 230 |
-| teeth | 0.20 – 100 | 0.25 – 20 | 75 – 220 |
+| dirt | 0.004 – 2.5 | 0.25 – 5.0 | 110 – 180 |
+| repair | 0.01 – 60 | 0.1 – 15 | 30 – 245 |
+| demould | 0.002 – 50 | 0.25 – 15 | 20 – 215 |
+| lightning-arrester | 0.002 – 0.30 | 0.25 – 3.5 | 25 – 245 |
+| leaf-opex | 0.01 – 1.5 | 0.25 – 5.0 | 40 – 190 |
+| teeth | 0.2 – 100 | 0.25 – 20 | 75 – 220 |
+| painting-peel-off | 1.0 – 65 | 0.25 – 10 | 50 – 210 |
+| oil | 0.5 – 100 | 0.25 – 10 | 15 – 225 |
+| lightning-arrester-miss | 0.004 – 0.30 | 0.25 – 3.5 | 25 – 245 |
+| swell | 0.005 – 6.0 | 0.25 – 5.0 | 85 – 230 |
 
 ### Data Preparation
 
