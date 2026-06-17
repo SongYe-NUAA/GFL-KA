@@ -55,7 +55,7 @@ WindBlade-30K/
 | Blade30 | Soochow University | 1,302 | 1,218 | 31 | Polygon |
 | WCVP | Roboflow | 2,137 | 1,908 | 13 | Mask |
 | WTBSDD | — | 3,808 | 8,103 | 6 | Polygon |
-| **WindBlade-30K** | — | **5,168** | **30,437** | **17** | **Bounding Box** |
+| **WindBlade-30K** | NUAA | **5,168** | **30,437** | **17** | **Bounding Box** |
 
 ### Dataset Statistics
 
