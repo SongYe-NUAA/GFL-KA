@@ -1,2 +1,1 @@
-WindBlade-30K.zip
-链接: https://pan.baidu.com/s/1A8C_2Im6x8cmPOxkS95ZRA 提取码: hmn5 
+The WindBlade-30K dataset will be made publicly available via an open-access link in due course.
